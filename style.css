@@ -1,0 +1,425 @@
+:root {
+  --bg: #07090c;
+  --card: #11151a;
+  --line: #252c34;
+  --text: #ebe6dc;
+  --mute: #8d9298;
+  --amber: #e0a458;
+  --mint: #7fe3bd;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.35 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+header {
+  display: flex;
+  height: 48px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(12px, 3vw, 32px);
+}
+
+h1 {
+  margin: 0;
+  font: italic 600 23px/1 Georgia, "Iowan Old Style", serif;
+  letter-spacing: 0.01em;
+}
+
+main {
+  position: relative;
+  height: calc(100dvh - 48px);
+  margin: 0 auto;
+  padding: 8px clamp(10px, 2vw, 24px) 12px;
+}
+
+.stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+/* A warm, diffuse spotlight lifts the wood without obscuring the fretboard. */
+.stage::before {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 42% 72% at 27% 52%,
+    rgb(185 107 45 / 18%),
+    rgb(126 72 31 / 8%) 48%,
+    transparent 100%
+  );
+  content: "";
+  pointer-events: none;
+}
+
+.stage::after {
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 50px 36px var(--bg);
+  content: "";
+  pointer-events: none;
+}
+
+svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  cursor: pointer;
+  object-fit: contain;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.str,
+.glow {
+  fill: none;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+.glow {
+  stroke: var(--amber);
+  filter: drop-shadow(0 0 4px rgb(224 164 88 / 75%));
+  opacity: 0;
+}
+
+.pill {
+  fill: #090c10;
+  stroke: #53606a;
+  stroke-width: 1.6;
+}
+
+.num {
+  fill: #f0e9dc;
+  font: 700 16px system-ui, sans-serif;
+  text-anchor: middle;
+  paint-order: stroke;
+  stroke: #090c10;
+  stroke-width: 2px;
+  pointer-events: none;
+}
+
+.dot {
+  fill: var(--mint);
+  stroke: #06281d;
+  stroke-width: 3;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s;
+}
+
+/* Keep the action controls, chord pad, and modifiers aligned as three columns. */
+.panel {
+  position: absolute;
+  right: clamp(10px, 2vw, 24px);
+  bottom: clamp(10px, 2vh, 20px);
+  z-index: 1;
+  display: grid;
+  width: min(440px, calc(100% - 20px));
+  grid-template-areas: "actions pad mods";
+  grid-template-columns: 64px minmax(0, 1fr) 64px;
+  align-items: center;
+  gap: 5px;
+  margin: 0;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #11151aef;
+  box-shadow: 0 8px 28px #0008;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+}
+
+.actions,
+.mods {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 3px;
+}
+
+.actions {
+  grid-area: actions;
+}
+
+.mods {
+  grid-area: mods;
+  justify-content: center;
+}
+
+.actions button,
+.mods button {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  grid-template-rows: auto auto;
+  align-content: center;
+  justify-items: center;
+  gap: 1px;
+  margin: 0;
+  padding: 3px 2px;
+  font-size: 9px;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.actions button,
+.mods button {
+  border-color: #554328;
+  background: #242016;
+  color: var(--amber);
+}
+
+.actions button:hover,
+.mods button:hover {
+  border-color: var(--amber);
+  background: #302719;
+}
+
+.mods button[aria-pressed="true"] {
+  border-color: var(--amber);
+  background: var(--amber);
+  color: #1b1206;
+}
+
+#open {
+  white-space: nowrap;
+}
+
+button {
+  padding: 5px 7px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #181d23;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    transform 140ms ease;
+}
+
+button:hover {
+  border-color: #3a444f;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+button.main {
+  border-color: var(--amber);
+  background: var(--amber);
+  color: #1b1206;
+  font-weight: 600;
+}
+
+.actions button.main {
+  border-color: #554328;
+  background: #242016;
+  color: var(--amber);
+}
+
+button.ghost {
+  margin-left: auto;
+}
+
+button[aria-pressed="true"] {
+  border-color: var(--amber);
+  background: #2a2216;
+  color: var(--amber);
+}
+
+kbd {
+  margin: 0;
+  font: 9px/1 ui-monospace, monospace;
+  opacity: 0.65;
+}
+
+.actions button span,
+.mods button span {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: clip;
+}
+
+output {
+  min-width: 6ch;
+  padding: 0 4px;
+  font: italic 600 18px Georgia, serif;
+}
+
+.pad {
+  display: grid;
+  width: 100%;
+  grid-area: pad;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-self: center;
+  gap: 2px;
+}
+
+.pad button {
+  display: grid;
+  min-height: 22px;
+  align-content: center;
+  gap: 0;
+  padding: 1px;
+  border-radius: 4px;
+  text-align: center;
+  user-select: none;
+  box-shadow: inset 0 1px #ffffff08, 0 2px #090b0e;
+}
+
+.pad button:hover {
+  background: #222a31;
+  box-shadow: inset 0 1px #ffffff12, 0 2px #090b0e, 0 0 0 1px #e0a45855;
+  transform: translateY(-1px);
+}
+
+.pad i {
+  color: var(--mute);
+  font: 8px ui-monospace, monospace;
+  font-style: normal;
+  text-transform: uppercase;
+}
+
+.pad span {
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.pad .on {
+  border-color: var(--mint);
+  background: #10231d;
+}
+
+.tip {
+  margin: 0;
+  color: var(--mute);
+  font-size: 11px;
+}
+
+@media (max-width: 900px) {
+  main {
+    padding: 0 10px 8px;
+  }
+
+  svg {
+    width: auto;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .panel {
+    right: 10px;
+    bottom: 8px;
+    max-width: 440px;
+    gap: 4px;
+    padding: 5px;
+  }
+
+  .row {
+    gap: 4px;
+  }
+
+  button {
+    padding: 4px 6px;
+    font-size: 12px;
+  }
+
+  .pad {
+    gap: 3px;
+  }
+
+  .pad button {
+    min-height: 22px;
+  }
+
+  .tip {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  header {
+    height: 42px;
+  }
+
+  main {
+    height: calc(100dvh - 42px);
+  }
+
+  h1 {
+    font-size: 21px;
+  }
+
+  .panel {
+    right: 8px;
+    bottom: 6px;
+    width: min(400px, calc(100% - 16px));
+    grid-template-columns: 56px minmax(0, 1fr) 56px;
+    gap: 3px;
+    padding: 5px;
+  }
+
+  .row {
+    gap: 3px;
+  }
+
+  button {
+    padding: 3px 5px;
+    font-size: 11px;
+  }
+
+  .actions button,
+  .mods button {
+    padding: 2px 1px;
+    font-size: 8px;
+  }
+
+  .pad {
+    gap: 2px;
+  }
+
+  .pad button {
+    min-height: 22px;
+    padding: 1px;
+  }
+
+  .pad span {
+    font-size: 10px;
+  }
+
+  .pad i {
+    font-size: 8px;
+  }
+}
