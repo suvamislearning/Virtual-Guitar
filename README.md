@@ -6,6 +6,8 @@ A browser-based virtual acoustic guitar for strumming chords, exploring the
 fretboard, and playing individual strings. Use the on-screen controls or your
 keyboard to play.
 
+On a phone, rotate to landscape to load the guitar and bring up the controls.
+
 ## Get started
 
 Run the app from a local web server so the browser can load its audio samples
